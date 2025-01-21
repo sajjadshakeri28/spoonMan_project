@@ -199,3 +199,30 @@ void initializeMap() {
     playerY = 1;
     gameMap[playerX][playerY] = 'S';
 }
+void setDifficulty()
+{
+    cout << "Choose the degree of difficulty:" << endl;
+    cout << "1.easy\n2.medium\n3.hard" << endl;
+    cin >> difficulty;
+}
+int  calculateScore()
+{
+    int W_T = 1;
+    float W_M = 0.5;
+    int W_B = 2;
+    double T = (double)(clock() - startTime) / CLOCKS_PER_SEC;
+    int M= moves;
+    int B = bombsUsed;
+    double score= 100000/ (1 + (W_T * T) + (W_M * M) + (W_B * B));
+
+    if(difficulty == 2)
+    {
+        score *= 1.2;
+    }
+    if(difficulty == 3)
+    {
+        score *= 1.3;
+    }
+
+    return score;
+}
