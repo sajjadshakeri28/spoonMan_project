@@ -124,7 +124,10 @@ void startGame() {
         updateBombs();
         checkEnemies();
         checkGameEnd();
-    }void printMap() {
+    }
+}
+    void printMap()
+    {
     for (int i = 0; i < MAP_SIZE; i++) {
         for (int j = 0; j < MAP_SIZE; j++) {
 
@@ -159,7 +162,6 @@ void startGame() {
     }
 }
 
-}
 void initializeMap() {
     srand(time(0));
     int brickwallRate, enemyRate;
@@ -283,6 +285,16 @@ void updateBombs() {
 
     gameMap[x][y] = ' ';
     for (int i = 1; i <= 1; i++) {
+
+        if ((playerX == x) && (playerY == y))
+            {
+        system("cls");
+        cout << "GAME OVER!"<< endl;
+        cout <<"You were caught by an enemy." << endl;
+        cout << "if you want to get score: " << endl;
+        mainMenu();
+        exit(0);
+            }
         if (gameMap[x - i][y] != 'X' && gameMap[x - i][y] != '*')
             gameMap[x - i][y] = ' ';
         if (gameMap[x + i][y] != 'X' && gameMap[x + i][y] != '*')
