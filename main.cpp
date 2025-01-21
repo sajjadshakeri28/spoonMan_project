@@ -199,6 +199,37 @@ void initializeMap() {
     playerY = 1;
     gameMap[playerX][playerY] = 'S';
 }
+void movePlayer(char input) {
+    int newX = playerX, newY = playerY;
+
+    switch (input) {
+        case 'w': case 'W': newX--; break;
+        case 's': case 'S': newX++; break;
+        case 'a': case 'A': newY--; break;
+        case 'd': case 'D': newY++; break;
+        default: cout << "Invalid move!" << endl; return;
+    }
+
+    if (gameMap[newX][newY] == '*' || gameMap[newX][newY] == 'X' || gameMap[newX][newY] == '-') {
+        cout << "You hit a wall!" << endl;
+        return;
+    }
+
+    if (gameMap[newX][newY] == 'E') {
+        system("cls");
+        cout << "GAME OVER!"<< endl;
+        cout <<"You were caught by an enemy." << endl;
+        cout << "if you want to get score: " << endl;
+        mainMenu();
+        exit(0);
+    }
+
+    gameMap[playerX][playerY] = ' ';
+    playerX = newX;
+    playerY = newY;
+    gameMap[playerX][playerY] = 'S';
+    moves++;
+}
 void setDifficulty()
 {
     cout << "Choose the degree of difficulty:" << endl;
