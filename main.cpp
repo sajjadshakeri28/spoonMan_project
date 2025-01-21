@@ -4,6 +4,8 @@
 #include <ctime>
 #include <vector>
 #include <windows.h>
+#include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -14,10 +16,16 @@ bool gateVisible = false;
 int difficulty = 1;
 int moves = 0 , bombsUsed = 0;
 clock_t startTime;
+string playerName;
+
 
 struct Bomb {
     int x, y;
     int timer;
+};
+struct Score{
+    string name;
+    int score;
 };
 
 vector<Bomb> bombs;
@@ -50,6 +58,8 @@ void checkEnemies();
 void showGate();
 void checkGameEnd();
 int calculateScore();
+void showHighscores();
+void saveScore(int score);
 
 int main() {
     mainMenu();
@@ -59,15 +69,16 @@ int main() {
 }
 
 void mainMenu() {
+    cout << "please Enter your name:";
+    cin >> playerName;
     int choice;
     do {
         cout << "======== SpoonMan ========" << endl;
         cout << "1. Start Game" << endl;
-        cout << "2. Load Game" << endl;
-        cout << "3. Difficulty" << endl;
-        cout << "4. Help" << endl;
-        cout << "5. High Scores" << endl;
-        cout << "6. Exit" << endl;
+        cout << "2. Difficulty" << endl;
+        cout << "3. Help" << endl;
+        cout << "4. High Scores" << endl;
+        cout << "5. Exit" << endl;
         cout << "==========================" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
@@ -78,20 +89,23 @@ void mainMenu() {
                 startGame();
                 break;
             case 2:
-                cout << "Loading game..." << endl;
-                break;
-            case 3:
                 cout << "Setting difficulty..." << endl;
                 setDifficulty();
                 break;
-            case 4:
+            case 3:
+                cout << "teem name:" << endl;
+                cout << "team member:\nmahdiAmini:4031226239\nsajjadshakeri:4031226081" << endl;
                 cout << "Help: Your goal is to defeat all enemies and exit the map." << endl;
+                cout << "Controls: W = Up, S = Down, A = Left, D = Right, B = Place Bomb, Q = Quit" << endl;
+                break;
+            case 4:
+                cout << "High Scores: " << endl;
+                showHighscores();
                 break;
             case 5:
-                cout << "High Scores: (Not implemented yet)" << endl;
-                break;
-            case 6:
                 cout << "Exiting game..." << endl;
+                system("cls");
+                exit(0);
                 break;
             default:
                 cout << "Invalid choice! Try again." << endl;
@@ -108,8 +122,6 @@ void startGame()
     while (true) {
         system("cls");
         printMap();
-
-        cout << "Controls: W = Up, S = Down, A = Left, D = Right, B = Place Bomb, Q = Quit" << endl;
         cout << "Enter your move: ";
         input = getch();
 
@@ -327,12 +339,85 @@ void showGate() {
 }
 
 void checkGameEnd() {
+        string answer;
     if (gateVisible && playerX == MAP_SIZE - 2 && playerY == MAP_SIZE - 2) {
         system("cls");
-        cout << "Congratulations! You reached the gate and completed the game!" << endl;
-        cout << "your Score: "<< calculateScore() << endl;
+        int finalscore = calculateScore();
+        cout << "Congratulations!"<< playerName << "You reached the gate and completed the game!" << endl;
+        cout << "yourscore:" << finalscore << endl;
+        saveScore(finalscore);
         cout << "if you want to get more score: " << endl;
-        mainMenu();
+        cout << "are you want to play again?(yes/no)"<< endl;
+        cin >> answer;
+        if(answer == "yes")
+        {
+             mainMenu();
+        }
+       else if(answer == "no")
+       {
+        system("cls");
         exit(0);
+       }
+        
+    }
+}
+
+void saveScore(int score)
+{
+    ofstream file("highscores.txt",ios::app);
+
+    if(!file)
+    {
+        cout << "Eror : could not open higscores.txt for writing" << endl;
+        return;
+    }
+    file << playerName << " " << score << endl;
+    file.close();
+}
+void showHighscores()
+{
+    Score scores[100];
+    int scorecount = 0;
+    
+
+    ifstream file("highscores.txt");
+
+    if(file.is_open())
+    {
+        while(file >> scores[scorecount].name >> scores[scorecount].score)
+        {
+            ++scorecount;
+            if(scorecount >= 100)
+            {
+                break;    
+            }     
+        }
+    file.close();
+    }
+    else{
+        cout << "No high scores availbe." << endl;
+        return;
+    }
+
+    for(int i = 0 ; i < scorecount - 1 ; i++)
+    {
+        for(int j = 0 ; j < scorecount - i - 1 ; j++)
+        {
+            if(scores[j].score < scores[j+1].score)
+            {
+                Score temp = scores[i];
+                scores[j]= scores[j+1];
+                scores[j+1]= temp;
+                
+            }
+        }
+    }
+    
+    cout << "=======HighScores=======" << endl;
+    for(int i = 0 ; i < scorecount && i < 10 ; i++)
+    {
+        cout << i + 1 << scores[i].name << "-" << scores[i].score<< endl;
+        cout << "============================";
+        system("pause");
     }
 }
