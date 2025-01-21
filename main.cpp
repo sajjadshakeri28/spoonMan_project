@@ -1,47 +1,23 @@
 #include <iostream>
 #include <conio.h>
-#include <windows.h>
-#include <cstdlib>
-#include <ctime>
+#include <cstdlib> 
+#include <ctime>   
+#include <vector>  
+#include <windows.h> 
+
 using namespace std;
 
-void setColor(int color) {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole, color);
-}
+const int MAP_SIZE = 25; 
+char gameMap[MAP_SIZE][MAP_SIZE]; 
+int playerX = 0, playerY = 0;     
+bool gateVisible = false;         
+int difficulty = 1;
+int moves = 0 , bombsUsed = 0;
+clock_t startTime;
 
-void gotoXY(int x, int y) {
-    COORD coord;
-    coord.X = x;
-    coord.Y = y;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
+struct Bomb {
+    int x, y; 
+    int timer;
+};
 
-int main() {
-    srand(time(0));
-
-    gotoXY(30, 1);
-    cout << "Hello to game" << endl << endl;
-
-    gotoXY(3, 5);
-    setColor(10);
-    cout << "SS";
-
-    for (int i = 9; i < 60; i += 6) {
-        for (int j = 5; j < 20; j += 4) {
-            setColor(8);
-            gotoXY(i, j);
-            cout << "XX";
-        }
-    }
-
-    for (int i = 5; i < 60; i += 6) {
-        for (int j = 5; j < 20; j += 2) {
-            setColor(15);
-            gotoXY(i, j);
-            cout << "|  |";
-        }
-    }
-
-   
-
+vector<Bomb> bombs;
