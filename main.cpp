@@ -58,7 +58,6 @@ int main() {
     return 0;
 }
 
-
 void mainMenu() {
     int choice;
     do {
@@ -125,10 +124,44 @@ void startGame() {
         updateBombs();
         checkEnemies();
         checkGameEnd();
+    }void printMap() {
+    for (int i = 0; i < MAP_SIZE; i++) {
+        for (int j = 0; j < MAP_SIZE; j++) {
+
+            switch(gameMap[i][j])
+            {
+                case 'S':
+                    setColor(10);
+                    break;
+                case 'E':
+                    setColor(12);
+                    break;
+                case 'X':
+                    setColor(8);
+                    break;
+                case '-':
+                    setColor(6);
+                    break;
+                case 'B':
+                    setColor(14);
+                    break;
+                case '#':
+                    setColor(9);
+                    break;
+                default:
+                    setColor(15);
+                    break;
+
+            }
+            cout << gameMap[i][j] << " ";
+        }
+        cout << endl;
     }
 }
+
+}
 void initializeMap() {
-    srand(time(0)); 
+    srand(time(0));
     int brickwallRate, enemyRate;
 
     if(difficulty == 1)
@@ -145,25 +178,24 @@ void initializeMap() {
         brickwallRate = 2;
         enemyRate = 8;
     }
-    gateVisible = false; 
+    gateVisible = false;
     for (int i = 0; i < MAP_SIZE; i++) {
         for (int j = 0; j < MAP_SIZE; j++) {
             if (i == 0 || i == MAP_SIZE - 1 ||  j == 0 || j == MAP_SIZE - 1) {
-                gameMap[i][j] = '*'; 
+                gameMap[i][j] = '*';
             } else if (( i ) % 2 == 0 && ( j ) % 2 == 0) {
-                gameMap[i][j] = 'X'; 
+                gameMap[i][j] = 'X';
             } else if ((rand() % brickwallRate) == 0) {
-                gameMap[i][j] = '-'; 
+                gameMap[i][j] = '-';
             } else if ((rand() % enemyRate) == 0) {
-                gameMap[i][j] = 'E'; 
+                gameMap[i][j] = 'E';
             } else {
-                gameMap[i][j] = ' '; 
+                gameMap[i][j] = ' ';
             }
         }
     }
-    
+
     playerX = 1;
     playerY = 1;
-    gameMap[playerX][playerY] = 'S'; 
+    gameMap[playerX][playerY] = 'S';
 }
-
