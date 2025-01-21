@@ -98,7 +98,8 @@ void mainMenu() {
         }
     } while (choice != 6);
 }
-void startGame() {
+void startGame()
+ {
     startTime = clock();
     moves = 0;
     bombsUsed = 0;
@@ -124,7 +125,10 @@ void startGame() {
         updateBombs();
         checkEnemies();
         checkGameEnd();
-    }void printMap() {
+    }
+}
+void printMap()
+{
     for (int i = 0; i < MAP_SIZE; i++) {
         for (int j = 0; j < MAP_SIZE; j++) {
 
@@ -157,8 +161,6 @@ void startGame() {
         }
         cout << endl;
     }
-}
-
 }
 void initializeMap() {
     srand(time(0));
@@ -282,15 +284,25 @@ void updateBombs() {
     int y = bombs[index].y;
 
     gameMap[x][y] = ' ';
+    if ((playerX == x) && (playerY == y))
+        {
+            system("cls");
+           cout << "GAME OVER!"<< endl;
+           cout <<"You were caught by an enemy." << endl;
+           cout << "if you want to get score: " << endl;
+           mainMenu();
+           exit(0);
+        }
     for (int i = 1; i <= 1; i++) {
         if (gameMap[x - i][y] != 'X' && gameMap[x - i][y] != '*')
             gameMap[x - i][y] = ' ';
         if (gameMap[x + i][y] != 'X' && gameMap[x + i][y] != '*')
-             gameMap[x + i][y] = ' ';
+            gameMap[x + i][y] = ' ';
         if (gameMap[x][y - i] != 'X' && gameMap[x][y - i] != '*')
-             gameMap[x][y - i] = ' ';
+            gameMap[x][y - i] = ' ';
         if (gameMap[x][y + i] != 'X' && gameMap[x][y + i] != '*')
-             gameMap[x][y + i] = ' ';
+            gameMap[x ][y + i] = ' ';
+       
     }
     cout << "Boom! Bomb exploded at (" << x << ", " << y << ")." << endl;
 }
