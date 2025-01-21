@@ -308,3 +308,19 @@ void checkEnemies() {
         showGate();
     }
 }
+void showGate() {
+    gateVisible = true;
+    gameMap[MAP_SIZE - 2][MAP_SIZE - 2] = '#';
+    cout << "The gate has appeared!" << endl;
+}
+
+void checkGameEnd() {
+    if (gateVisible && playerX == MAP_SIZE - 2 && playerY == MAP_SIZE - 2) {
+        system("cls");
+        cout << "Congratulations! You reached the gate and completed the game!" << endl;
+        cout << "your Score: "<< calculateScore() << endl;
+        cout << "if you want to get more score: " << endl;
+        mainMenu();
+        exit(0);
+    }
+}
