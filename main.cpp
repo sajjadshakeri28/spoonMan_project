@@ -199,6 +199,33 @@ void initializeMap() {
     playerY = 1;
     gameMap[playerX][playerY] = 'S';
 }
+void setDifficulty()
+{
+    cout << "Choose the degree of difficulty:" << endl;
+    cout << "1.easy\n2.medium\n3.hard" << endl;
+    cin >> difficulty;
+}
+int  calculateScore()
+{
+    int W_T = 1;
+    float W_M = 0.5;
+    int W_B = 2;
+    double T = (double)(clock() - startTime) / CLOCKS_PER_SEC;
+    int M= moves;
+    int B = bombsUsed;
+    double score= 100000/ (1 + (W_T * T) + (W_M * M) + (W_B * B));
+
+    if(difficulty == 2)
+    {
+        score *= 1.2;
+    }
+    if(difficulty == 3)
+    {
+        score *= 1.3;
+    }
+
+    return score;
+}
 void movePlayer(char input) {
     int newX = playerX, newY = playerY;
 
@@ -230,30 +257,24 @@ void movePlayer(char input) {
     gameMap[playerX][playerY] = 'S';
     moves++;
 }
-void setDifficulty()
-{
-    cout << "Choose the degree of difficulty:" << endl;
-    cout << "1.easy\n2.medium\n3.hard" << endl;
-    cin >> difficulty;
+void placeBomb() {
+    Bomb bomb = {playerX, playerY, 3}; 
+    bombs.push_back(bomb);
+    gameMap[playerX][playerY] = 'B'; 
+    cout << "Bomb placed!" << endl;
+    bombsUsed++;
 }
-int  calculateScore()
-{
-    int W_T = 1;
-    float W_M = 0.5;
-    int W_B = 2;
-    double T = (double)(clock() - startTime) / CLOCKS_PER_SEC;
-    int M= moves;
-    int B = bombsUsed;
-    double score= 100000/ (1 + (W_T * T) + (W_M * M) + (W_B * B));
 
-    if(difficulty == 2)
-    {
-        score *= 1.2;
-    }
-    if(difficulty == 3)
-    {
-        score *= 1.3;
-    }
 
-    return score;
+void updateBombs() {
+    for (int i = 0; i < bombs.size(); i++) {
+        bombs[i].timer--; 
+
+        if (bombs[i].timer == 0) {
+            explodeBomb(i); 
+            bombs.erase(bombs.begin() + i); 
+            i--; 
+        }
+    }
 }
+
