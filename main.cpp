@@ -1,22 +1,22 @@
 #include <iostream>
 #include <conio.h>
-#include <cstdlib> 
-#include <ctime>   
-#include <vector>  
-#include <windows.h> 
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+#include <windows.h>
 
 using namespace std;
 
-const int MAP_SIZE = 25; 
-char gameMap[MAP_SIZE][MAP_SIZE]; 
-int playerX = 0, playerY = 0;     
-bool gateVisible = false;         
+const int MAP_SIZE = 25;
+char gameMap[MAP_SIZE][MAP_SIZE];
+int playerX = 0, playerY = 0;
+bool gateVisible = false;
 int difficulty = 1;
 int moves = 0 , bombsUsed = 0;
 clock_t startTime;
 
 struct Bomb {
-    int x, y; 
+    int x, y;
     int timer;
 };
 
@@ -46,9 +46,9 @@ void movePlayer(char input);
 void placeBomb();
 void updateBombs();
 void explodeBomb(int index);
-void checkEnemies(); 
-void showGate();     
-void checkGameEnd();  
+void checkEnemies();
+void showGate();
+void checkGameEnd();
 int calculateScore();
 
 int main() {
@@ -73,7 +73,7 @@ void mainMenu() {
         cout << "Enter your choice: ";
         cin >> choice;
 
-        system("cls"); 
+        system("cls");
         switch (choice) {
             case 1:
                 startGame();
@@ -98,4 +98,32 @@ void mainMenu() {
                 cout << "Invalid choice! Try again." << endl;
         }
     } while (choice != 6);
+}
+void startGame() {
+    startTime = clock();
+    moves = 0;
+    bombsUsed = 0;
+    initializeMap();
+    char input;
+    while (true) {
+        system("cls");
+        printMap();
+
+        cout << "Controls: W = Up, S = Down, A = Left, D = Right, B = Place Bomb, Q = Quit" << endl;
+        cout << "Enter your move: ";
+        input = getch();
+
+        if (input == 'q' || input == 'Q') {
+            cout << "Returning to main menu..." << endl;
+            break;
+        } else if (input == 'b' || input == 'B') {
+            placeBomb();
+        } else {
+            movePlayer(input);
+        }
+
+        updateBombs();
+        checkEnemies();
+        checkGameEnd();
+    }
 }
