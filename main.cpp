@@ -258,9 +258,9 @@ void movePlayer(char input) {
     moves++;
 }
 void placeBomb() {
-    Bomb bomb = {playerX, playerY, 3}; 
+    Bomb bomb = {playerX, playerY, 3};
     bombs.push_back(bomb);
-    gameMap[playerX][playerY] = 'B'; 
+    gameMap[playerX][playerY] = 'B';
     cout << "Bomb placed!" << endl;
     bombsUsed++;
 }
@@ -268,13 +268,43 @@ void placeBomb() {
 
 void updateBombs() {
     for (int i = 0; i < bombs.size(); i++) {
-        bombs[i].timer--; 
+        bombs[i].timer--;
 
         if (bombs[i].timer == 0) {
-            explodeBomb(i); 
-            bombs.erase(bombs.begin() + i); 
-            i--; 
+            explodeBomb(i);
+            bombs.erase(bombs.begin() + i);
+            i--;
         }
     }
+
+}void explodeBomb(int index) {
+    int x = bombs[index].x;
+    int y = bombs[index].y;
+
+    gameMap[x][y] = ' ';
+    for (int i = 1; i <= 1; i++) {
+        if (gameMap[x - i][y] != 'X' && gameMap[x - i][y] != '*')
+            gameMap[x - i][y] = ' ';
+        if (gameMap[x + i][y] != 'X' && gameMap[x + i][y] != '*')
+             gameMap[x + i][y] = ' ';
+        if (gameMap[x][y - i] != 'X' && gameMap[x][y - i] != '*')
+             gameMap[x][y - i] = ' ';
+        if (gameMap[x][y + i] != 'X' && gameMap[x][y + i] != '*')
+             gameMap[x][y + i] = ' ';
+    }
+    cout << "Boom! Bomb exploded at (" << x << ", " << y << ")." << endl;
 }
 
+
+void checkEnemies() {
+    for (int i = 0; i < MAP_SIZE; i++) {
+        for (int j = 0; j < MAP_SIZE; j++) {
+            if (gameMap[i][j] == 'E') {
+                return;
+            }
+        }
+    }
+    if (!gateVisible) {
+        showGate();
+    }
+}
