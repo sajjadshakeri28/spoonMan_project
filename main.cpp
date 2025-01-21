@@ -127,3 +127,43 @@ void startGame() {
         checkGameEnd();
     }
 }
+void initializeMap() {
+    srand(time(0)); 
+    int brickwallRate, enemyRate;
+
+    if(difficulty == 1)
+    {
+        brickwallRate = 4;
+        enemyRate = 18 ;
+    }
+    else if(difficulty == 2)
+    {
+        brickwallRate = 3;
+        enemyRate = 12;
+    }
+    else{
+        brickwallRate = 2;
+        enemyRate = 8;
+    }
+    gateVisible = false; 
+    for (int i = 0; i < MAP_SIZE; i++) {
+        for (int j = 0; j < MAP_SIZE; j++) {
+            if (i == 0 || i == MAP_SIZE - 1 ||  j == 0 || j == MAP_SIZE - 1) {
+                gameMap[i][j] = '*'; 
+            } else if (( i ) % 2 == 0 && ( j ) % 2 == 0) {
+                gameMap[i][j] = 'X'; 
+            } else if ((rand() % brickwallRate) == 0) {
+                gameMap[i][j] = '-'; 
+            } else if ((rand() % enemyRate) == 0) {
+                gameMap[i][j] = 'E'; 
+            } else {
+                gameMap[i][j] = ' '; 
+            }
+        }
+    }
+    
+    playerX = 1;
+    playerY = 1;
+    gameMap[playerX][playerY] = 'S'; 
+}
+
