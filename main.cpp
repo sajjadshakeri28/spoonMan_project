@@ -15,7 +15,7 @@ int playerX = 0, playerY = 0;
 bool gateVisible = false;
 int difficulty = 1;
 int moves = 0 , bombsUsed = 0;
-clock_t startTime, lastEnemyMovetime = 0;
+clock_t startTime;
 string playerName;
 bool hasAbillity = false;
 
@@ -111,7 +111,7 @@ void mainMenu() {
             default:
                 cout << "Invalid choice! Try again." << endl;
         }
-    } while (choice != 6);
+    } while (choice != 5);
 }
 void startGame()
  {
@@ -252,7 +252,8 @@ void movePlayer(char input) {
     int newX = playerX, newY = playerY;
 
     switch (input) {
-        case 'w': case 'W': newX--; break;
+        case 'w':
+         case 'W': newX--; break;
         case 's': case 'S': newX++; break;
         case 'a': case 'A': newY--; break;
         case 'd': case 'D': newY++; break;
