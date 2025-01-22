@@ -15,8 +15,9 @@ int playerX = 0, playerY = 0;
 bool gateVisible = false;
 int difficulty = 1;
 int moves = 0 , bombsUsed = 0;
-clock_t startTime;
+clock_t startTime, lastEnemyMovetime = 0;
 string playerName;
+bool hasAbillity = false;
 
 
 struct Bomb {
@@ -93,7 +94,7 @@ void mainMenu() {
                 setDifficulty();
                 break;
             case 3:
-                cout << "teem name:" << endl;
+                cout << "teem name:mahad" << endl;
                 cout << "team member:\nmahdiAmini:4031226239\nsajjadshakeri:4031226081" << endl;
                 cout << "Help: Your goal is to defeat all enemies and exit the map." << endl;
                 cout << "Controls: W = Up, S = Down, A = Left, D = Right, B = Place Bomb, Q = Quit" << endl;
@@ -117,6 +118,7 @@ void startGame()
     startTime = clock();
     moves = 0;
     bombsUsed = 0;
+    hasAbillity = false;
     initializeMap();
     char input;
     while (true) {
@@ -173,23 +175,24 @@ void printMap()
         cout << endl;
     }
 }
+
 void initializeMap() {
     srand(time(0));
     int brickwallRate, enemyRate;
 
     if(difficulty == 1)
     {
-        brickwallRate = 4;
+        brickwallRate =7;
         enemyRate = 18 ;
     }
     else if(difficulty == 2)
     {
-        brickwallRate = 3;
-        enemyRate = 12;
+        brickwallRate = 6;
+        enemyRate = 16;
     }
     else{
-        brickwallRate = 2;
-        enemyRate = 8;
+        brickwallRate = 5;
+        enemyRate = 12;
     }
     gateVisible = false;
     for (int i = 0; i < MAP_SIZE; i++) {
@@ -211,6 +214,12 @@ void initializeMap() {
     playerX = 1;
     playerY = 1;
     gameMap[playerX][playerY] = 'S';
+
+    for(int i = 1 ; i <= 2 ; i++)
+    {
+        gameMap[playerX + i][playerY] = ' ';
+        gameMap[playerX][playerY + i] = ' ';
+    }
 }
 void setDifficulty()
 {
@@ -254,6 +263,12 @@ void movePlayer(char input) {
         cout << "You hit a wall!" << endl;
         return;
     }
+    if(gameMap[newX][newY] == 'A')
+    {
+        hasAbillity = true;
+        cout << "Abillity collected! bomb radius increased!" << endl;
+    }
+
 
     if (gameMap[newX][newY] == 'E') {
         system("cls");
@@ -271,7 +286,8 @@ void movePlayer(char input) {
     moves++;
 }
 void placeBomb() {
-    Bomb bomb = {playerX, playerY, 3};
+    int bombTimer = hasAbillity ? 4 : 3;
+    Bomb bomb = {playerX, playerY,bombTimer};
     bombs.push_back(bomb);
     gameMap[playerX][playerY] = 'B';
     cout << "Bomb placed!" << endl;
@@ -290,7 +306,8 @@ void updateBombs() {
         }
     }
 
-}void explodeBomb(int index) {
+}
+void explodeBomb(int index) {
     int x = bombs[index].x;
     int y = bombs[index].y;
 
@@ -304,19 +321,61 @@ void updateBombs() {
            mainMenu();
            exit(0);
         }
-    for (int i = 1; i <= 1; i++) {
-        if (gameMap[x - i][y] != 'X' && gameMap[x - i][y] != '*')
-            gameMap[x - i][y] = ' ';
-        if (gameMap[x + i][y] != 'X' && gameMap[x + i][y] != '*')
-            gameMap[x + i][y] = ' ';
-        if (gameMap[x][y - i] != 'X' && gameMap[x][y - i] != '*')
-            gameMap[x][y - i] = ' ';
-        if (gameMap[x][y + i] != 'X' && gameMap[x][y + i] != '*')
-            gameMap[x ][y + i] = ' ';
+    int radius = 0;
+    if(hasAbillity) 
+        radius = 2;
+    else
+        radius = 1;       
+    for (int i = 1; i <= radius; i++) {
 
+        if (gameMap[x - i][y] != 'X' && gameMap[x - i][y] != '*')
+            
+            if(hasAbillity)
+            {
+                gameMap[x - i][y] = ' ';
+            }
+            else
+            { 
+                if(gameMap[x - i][y] == '-')
+                    gameMap[x - i][y] = (rand() % 5 == 0) ? 'A' : ' ' ;
+            }
+        if (gameMap[x + i][y] != 'X' && gameMap[x + i][y] != '*')
+           if(hasAbillity)
+           {
+                gameMap[x + i][y] = ' ';
+           }
+            else
+            {
+                if(gameMap[x + i][y] == '-')
+                    gameMap[x + i][y] = (rand() % 5 == 0) ? 'A' : ' ' ; 
+            }
+        if (gameMap[x][y - i] != 'X' && gameMap[x][y - i] != '*')
+            if(hasAbillity)
+            {
+                
+                gameMap[x][y - i] = ' ';
+            }
+         else
+            {   
+                if(gameMap[x][y - i] == '-')
+                    gameMap[x][y - i] = (rand() % 5 == 0) ? 'A' : ' ';
+                
+            }        
+        if (gameMap[x][y + i] != 'X' && gameMap[x][y + i] != '*')
+            if(hasAbillity)
+            {
+                 gameMap[x][y + i] = ' ';
+            }
+         else
+            {
+                if(gameMap[x][y + i] == '-')
+                    gameMap[x][y + i] = (rand() % 5 == 0) ? 'A' : ' ';
+            }
     }
     cout << "Boom! Bomb exploded at (" << x << ", " << y << ")." << endl;
-}void checkEnemies() {
+}
+void checkEnemies()
+{
     for (int i = 0; i < MAP_SIZE; i++) {
         for (int j = 0; j < MAP_SIZE; j++) {
             if (gameMap[i][j] == 'E') {
