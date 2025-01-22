@@ -15,7 +15,7 @@ int playerX = 0, playerY = 0;
 bool gateVisible = false;
 int difficulty = 1;
 int moves = 0 , bombsUsed = 0;
-clock_t startTime, lastEnemyMovetime = 0;
+clock_t startTime;
 string playerName;
 bool hasAbillity = false;
 
@@ -111,7 +111,7 @@ void mainMenu() {
             default:
                 cout << "Invalid choice! Try again." << endl;
         }
-    } while (choice != 6);
+    } while (choice != 5);
 }
 void startGame()
  {
@@ -252,10 +252,14 @@ void movePlayer(char input) {
     int newX = playerX, newY = playerY;
 
     switch (input) {
-        case 'w': case 'W': newX--; break;
-        case 's': case 'S': newX++; break;
-        case 'a': case 'A': newY--; break;
-        case 'd': case 'D': newY++; break;
+        case 'w': case 'W':
+            newX--; break;
+        case 's': case 'S':
+            newX++; break;
+        case 'a': case 'A':
+            newY--; break;
+        case 'd': case 'D':
+            newY++; break;
         default: cout << "Invalid move!" << endl; return;
     }
 
@@ -322,20 +326,20 @@ void explodeBomb(int index) {
            exit(0);
         }
     int radius = 0;
-    if(hasAbillity) 
+    if(hasAbillity)
         radius = 2;
     else
-        radius = 1;       
+        radius = 1;
     for (int i = 1; i <= radius; i++) {
 
         if (gameMap[x - i][y] != 'X' && gameMap[x - i][y] != '*')
-            
+
             if(hasAbillity)
             {
                 gameMap[x - i][y] = ' ';
             }
             else
-            { 
+            {
                 if(gameMap[x - i][y] == '-')
                     gameMap[x - i][y] = (rand() % 5 == 0) ? 'A' : ' ' ;
             }
@@ -347,20 +351,20 @@ void explodeBomb(int index) {
             else
             {
                 if(gameMap[x + i][y] == '-')
-                    gameMap[x + i][y] = (rand() % 5 == 0) ? 'A' : ' ' ; 
+                    gameMap[x + i][y] = (rand() % 5 == 0) ? 'A' : ' ' ;
             }
         if (gameMap[x][y - i] != 'X' && gameMap[x][y - i] != '*')
             if(hasAbillity)
             {
-                
+
                 gameMap[x][y - i] = ' ';
             }
          else
-            {   
+            {
                 if(gameMap[x][y - i] == '-')
                     gameMap[x][y - i] = (rand() % 5 == 0) ? 'A' : ' ';
-                
-            }        
+
+            }
         if (gameMap[x][y + i] != 'X' && gameMap[x][y + i] != '*')
             if(hasAbillity)
             {
@@ -401,7 +405,6 @@ void checkGameEnd() {
         cout << "Congratulations!"<< playerName << "You reached the gate and completed the game!" << endl;
         cout << "yourscore:" << finalscore << endl;
         saveScore(finalscore);
-        cout << "if you want to get more score: " << endl;
         cout << "are you want to play again?(yes/no)"<< endl;
         cin >> answer;
         if(answer == "yes")
@@ -471,7 +474,7 @@ void showHighscores()
     cout << "=======HighScores=======" << endl;
     for(int i = 0 ; i < scorecount && i < 10 ; i++)
     {
-        cout << i + 1 << scores[i].name << "-" << scores[i].score<< endl;
+        cout << i + 1 << "_" << scores[i].name << "-" << scores[i].score<< endl;
         cout << "============================";
         system("pause");
     }
